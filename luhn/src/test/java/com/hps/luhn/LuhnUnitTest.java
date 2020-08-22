@@ -39,7 +39,10 @@ public class LuhnUnitTest {
 
 	@Test
 	public void countRange() {
-		assertEquals(1, 927398710, 927398720);
+		// testing startRange > endRange
+		assertEquals(0, luhn.countRange(927398720, 927398710));
+
+		assertEquals(1, luhn.countRange(927398710, 927398720));
 	}
 
 }
