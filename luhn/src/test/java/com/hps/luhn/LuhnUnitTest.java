@@ -23,7 +23,6 @@ public class LuhnUnitTest {
 		assertEquals(0, luhn.generateCheckDigit(92739875));
 	}
 
-	@Ignore
 	@Test
 	public void isValidLuhn() {
 		assertFalse(luhn.isValidLuhn(927398710));

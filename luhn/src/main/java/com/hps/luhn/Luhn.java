@@ -6,8 +6,6 @@ package com.hps.luhn;
 public class Luhn {
 
 	/**
-	 * TODO
-	 * 
 	 * Accepts a card number and determines if the card number is a valid number
 	 * with respect to the Luhn algorithm.
 	 * 
@@ -18,8 +16,9 @@ public class Luhn {
 	 *         false if not
 	 */
 	public boolean isValidLuhn(int cardNumber) {
-		return false;
+		return ((getLuhnSum(cardNumber, false) % 10) == 0);
 	}
+
 
 	/**
 	 * Accepts a partial card number (excluding the last digit) and generates
@@ -31,29 +30,9 @@ public class Luhn {
 	 * @return the check digit
 	 */
 	public int generateCheckDigit(int cardNumber) {
-		boolean doubleDigit = true;
-		int sum = 0;
-		while (cardNumber > 0) {
-			// starting from the right (rightmost is the unknown check digit)
-			long digit = cardNumber % 10; 
-
-			if (doubleDigit) { // double the value of every second digit
-				digit *= 2;
-
-				// if two digits, use the sum of the digits
-				if (digit >= 10) {
-					digit = digit / 10 + digit % 10; 
-				}
-			}
-			doubleDigit = !doubleDigit;
-
-			sum += digit;
-
-			cardNumber /= 10; // remaining digits to the left
-		}
-
-		return sum * 9 % 10;
+		return getLuhnSum(cardNumber, true) * 9 % 10;
 	}
+
 
 	/**
 	 * TODO
@@ -71,5 +50,38 @@ public class Luhn {
 	 */
 	public int countRange(int startRange, int endRange) {
 		return 1;
+	}
+
+
+	/**
+	 * Calculates the Luhn sum for a given credit card number.
+	 *
+	 * @param cardNumber the credit card number to process
+	 * @param doubleDigit used to allow code reuse for generateCheckDigit() and isValidLuhn()
+	 * @return the calculate Luhn sum value
+	 */
+	private int getLuhnSum(int cardNumber, boolean doubleDigit) {
+		int sum = 0;
+
+		while (cardNumber > 0) {
+			// starting from the right (rightmost is the unknown check digit)
+			long digit = cardNumber % 10;
+
+			if (doubleDigit) { // double the value of every second digit
+				digit *= 2;
+
+				// if two digits, use the sum of the digits
+				if (digit >= 10) {
+					digit = digit / 10 + digit % 10;
+				}
+			}
+			doubleDigit = !doubleDigit;
+
+			sum += digit;
+
+			cardNumber /= 10; // remaining digits to the left
+		}
+
+		return sum;
 	}
 }
