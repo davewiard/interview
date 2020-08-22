@@ -41,7 +41,7 @@ public class Luhn {
 				digit *= 2;
 
 				// if two digits, use the sum of the digits
-				if (digit > 10) {
+				if (digit >= 10) {
 					digit = digit / 10 + digit % 10; 
 				}
 			}
