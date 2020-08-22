@@ -56,9 +56,15 @@ public class Luhn {
 	/**
 	 * Calculates the Luhn sum for a given credit card number.
 	 *
-	 * @param cardNumber the credit card number to process
-	 * @param doubleDigit used to allow code reuse for generateCheckDigit() and isValidLuhn()
-	 * @return the calculate Luhn sum value
+	 * @param cardNumber
+	 * 			  the credit card number to process
+	 *
+	 * @param doubleDigit
+	 *            Used to determine if the least significant (right-most) digit
+	 *            or second digits is doubled. This allows for isLuhnValid and
+	 *            getCheckDigit to use the same code to calculate the Luhn sum.
+	 *
+	 * @return the calculated Luhn sum value for the given credit card number
 	 */
 	private int getLuhnSum(int cardNumber, boolean doubleDigit) {
 		int sum = 0;
