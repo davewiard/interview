@@ -1,9 +1,16 @@
 package com.hps.luhn;
 
+import java.math.BigInteger;
+
 /**
  * @see https://en.wikipedia.org/wiki/Luhn_algorithm#Description
  */
 public class Luhn {
+
+	public final BigInteger bigIntegerOne = new BigInteger("1");
+	public final BigInteger bigIntegerTwo = new BigInteger("2");
+	public final BigInteger bigIntegerTen = new BigInteger("10");
+	public final BigInteger bigIntegerZero = new BigInteger("0");
 
 	/**
 	 * Accepts a card number and determines if the card number is a valid number
@@ -15,7 +22,7 @@ public class Luhn {
 	 * @return true if the card number is valid according to the Luhn algorithm,
 	 *         false if not
 	 */
-	public boolean isValidLuhn(int cardNumber) {
+	public boolean isValidLuhn(BigInteger cardNumber) {
 		return ((getLuhnSum(cardNumber, false) % 10) == 0);
 	}
 
@@ -29,7 +36,7 @@ public class Luhn {
 	 * 
 	 * @return the check digit
 	 */
-	public int generateCheckDigit(int cardNumber) {
+	public int generateCheckDigit(BigInteger cardNumber) {
 		return getLuhnSum(cardNumber, true) * 9 % 10;
 	}
 
@@ -46,15 +53,18 @@ public class Luhn {
 	 * 
 	 * @return the number of valid Luhn card numbers in the range, inclusive
 	 */
-	public int countRange(int startRange, int endRange) {
-		if (endRange < startRange)
+	public int countRange(BigInteger startRange, BigInteger endRange) {
+		if (endRange.compareTo(startRange) < 0)
 			return 0;
 
 		int count = 0;
-		for (int cardNumber = startRange; cardNumber <= endRange; cardNumber++) {
+		BigInteger cardNumber = startRange;
+		while (cardNumber.compareTo(endRange) <= 0) {
 			if (isValidLuhn(cardNumber)) {
 				count++;
 			}
+
+			cardNumber = cardNumber.add(this.bigIntegerOne);
 		}
 
 		return count;
@@ -62,38 +72,39 @@ public class Luhn {
 
 
 	/**
-	 * Calculates the Luhn sum for a given credit card number.
+	 * Calculates the Luhn sum for a given card number.
 	 *
 	 * @param cardNumber
-	 * 			  the credit card number to process
+	 * 			  the card number to process
 	 *
 	 * @param doubleDigit
 	 *            Used to determine if the least significant (right-most) digit
 	 *            or second digits is doubled. This allows for isLuhnValid and
 	 *            getCheckDigit to use the same code to calculate the Luhn sum.
 	 *
-	 * @return the calculated Luhn sum value for the given credit card number
+	 * @return the calculated Luhn sum value for the given card number
 	 */
-	private int getLuhnSum(int cardNumber, boolean doubleDigit) {
+	private int getLuhnSum(BigInteger cardNumber, boolean doubleDigit) {
 		int sum = 0;
 
-		while (cardNumber > 0) {
+		while (cardNumber.compareTo(this.bigIntegerZero) > 0) {
 			// starting from the right (rightmost is the unknown check digit)
-			long digit = cardNumber % 10;
+			BigInteger digit = cardNumber.mod(this.bigIntegerTen);
 
 			if (doubleDigit) { // double the value of every second digit
-				digit *= 2;
+				digit = digit.multiply(this.bigIntegerTwo);
 
 				// if two digits, use the sum of the digits
-				if (digit >= 10) {
-					digit = digit / 10 + digit % 10;
+				if (digit.compareTo(this.bigIntegerTen) >= 0) {
+					digit = digit.divide(this.bigIntegerTen).add(digit.mod(this.bigIntegerTen));
 				}
 			}
+
 			doubleDigit = !doubleDigit;
 
-			sum += digit;
+			sum += digit.intValue();
 
-			cardNumber /= 10; // remaining digits to the left
+			cardNumber = cardNumber.divide(this.bigIntegerTen); // remaining digits to the left
 		}
 
 		return sum;
