@@ -19,6 +19,9 @@ public class LuhnUnitTest {
 	@Test
 	public void generateCheckDigit() {
 		assertEquals(9, luhn.generateCheckDigit(92739871));
+
+		// final digit being 5 exposes a bug in generateCheckDigit when the last digit is doubled
+		assertEquals(0, luhn.generateCheckDigit(92739875));
 	}
 
 	@Test
